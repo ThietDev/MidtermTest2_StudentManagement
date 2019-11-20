@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Student Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <center>
+        <h1 style="color: cornflowerblue;">Student Management</h1>
+        <div class="form-group">
+            <label>Student Name</label>
+            <input style="width: 500px;" type="text" class="form-control" id="name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label>Class</label>
+            <input style="width: 500px;" type="text" class="form-control" id="classes" placeholder="Enter class">
+        </div>
+        <div class="form-group">
+            <label>English Score</label>
+            <input style="width: 500px;" type="number" class="form-control" id="englishscore"
+                placeholder="Enter EL Score">
+        </div>
+        <div class="form-group">
+            <label>Android Score</label>
+            <input style="width: 500px;" type="number" class="form-control" id="androidscore"
+                placeholder="Enter Android Score">
+        </div>
+
+        <button class="btn btn-primary" onclick="addStudent()">Add</button>
+    </center>
+    </br>
+    <center>
+        <table class="table table-hover" style="width: 800px;">
+            <thead>
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Class</th>
+                    <th scope="col">English</th>
+                    <th scope="col">Android</th>
+                    <th scope="col">Average</th>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="dataList">
+
+            </tbody>
+        </table>
+    </center>
+
+    <script>
+
+        var students = JSON.parse(localStorage.getItem('students')) || []
+        displayStudent();
+        var ly = 1;
+        // var count = 0;
+        function addStudent() {
+            // count++;
+            var name = document.getElementById("name").value;
+            var englishscore = Number(document.getElementById("englishscore").value);
+            var androidScore = Number(document.getElementById("androidscore").value);
+            // var averageScore = (englishscore+androidScore)/2;
+            var classes = document.getElementById("classes").value;
+            var student = {
+                "name": name,
+                "englishscore": englishscore,
+                "androidScore": androidScore,
+                "classes": classes
+            };
+
+            console.log(student);
+
+            students.push(student);
+            var dataListTag = document.getElementById("dataList").value;
+
+            localStorage.setItem('students', JSON.stringify(students));
+            displayStudent();
+
+        }
+
+        function displayStudent() {
+            document.getElementById("dataList").innerHTML = "";
+            if (students.length > 0) {
+                for (i = 0; i < students.length; i++) {
+                    if ((students[i].englishscore + students[i].androidScore) / 2 >= 8) {
+                        document.getElementById("dataList").innerHTML += "<tr>" +
+                            "<td>" + i + 1 + "</td>" +
+                            "<td>" + students[i].name + "</td>" +
+                            "<td>" + students[i].classes + "</td>" +
+                            "<td>" + students[i].englishscore + "</td>" +
+                            "<td>" + students[i].androidScore + "</td>" +
+                            "<td>" + (students[i].englishscore + students[i].androidScore) / 2 + "</td>" +
+                            "<td style='color: yellow;'>" + "Very Good" + "</td>" +
+                            "<td><button class = 'btn btn-warning' onclick='deleteStudent(id)''>Delete</button></td>" +
+                            "</tr>";
+                    } else if ((students[i].englishscore + students[i].androidScore) / 2 < 8 && (students[i].englishscore + students[i].androidScore) / 2 > 7) {
+                        document.getElementById("dataList").innerHTML += "<tr>" +
+                            "<td>" + i + 1 + "</td>" +
+                            "<td>" + students[i].name + "</td>" +
+                            "<td>" + students[i].classes + "</td>" +
+                            "<td>" + students[i].englishscore + "</td>" +
+                            "<td>" + students[i].androidScore + "</td>" +
+                            "<td>" + (students[i].englishscore + students[i].androidScore) / 2 + "</td>" +
+                            "<td style='color: green;'>" + "Good" + "</td>" +
+                            "<td><button class = 'btn btn-warning' onclick='deleteStudent(id)''>Delete</button></td>" +
+                            "</tr>";
+                    } else if ((students[i].englishscore + students[i].androidScore) / 2 < 7) {
+                        document.getElementById("dataList").innerHTML += "<tr>" +
+                            "<td>" + i + 1 + "</td>" +
+                            "<td>" + students[i].name + "</td>" +
+                            "<td>" + students[i].classes + "</td>" +
+                            "<td>" + students[i].englishscore + "</td>" +
+                            "<td>" + students[i].androidScore + "</td>" +
+                            "<td>" + (students[i].englishscore + students[i].androidScore) / 2 + "</td>" +
+                            "<td style='color: grey;'>" + "Normal" + "</td>" +
+                            "<td><button class = 'btn btn-warning' onclick='deleteStudent(id)''>Delete</button></td>" +
+                            "</tr>";
+                    }
+
+                }
+            }
+        }
+
+        // function rankingStudent(){
+        //     document.getElementById("dataList").innerHTML = "";
+        //     if (students.length > 0) {
+        //         for (i = 0; i < students.length; i++) {
+        //             document.getElementById("dataList").innerHTML += "<tr>" +
+        //                 "<td>" + i + 1 + "</td>" +
+        //                 "<td>" + students[i].name + "</td>" +
+        //                 "<td>" + students[i].classes + "</td>" +
+        //                 "<td>" + students[i].englishscore + "</td>" +
+        //                 "<td>" + students[i].androidScore + "</td>" +
+        //                 "<td>" + (students[i].englishscore+students[i].androidScore)/2 + "</td>" +
+        //                 "<td>" +"</td>" +
+        //                 "<td><button class = 'btn btn-warning' onclick='deleteStudent(id)''>Delete</button></td>" +
+        //                 "</tr>";
+        //         }
+        //     }
+        // }
+
+        function deleteStudent(id) {
+            students.splice(id, 1);
+            localStorage.removeItem(students);
+            localStorage.setItem('students', JSON.stringify(students));
+            displayStudent();
+        }
+    </script>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</html>
